@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class commentform extends Component{
 	constructor(props){
 		super(props);
-		this.state = { author: '', comment : ''};
+		this.state = { author: '', text : ''};
 		this.handleAuthorChange = this.handleAuthorChange.bind(this);
 		this.handleCommentChange = this.handleCommentChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -12,11 +12,18 @@ class commentform extends Component{
 		this.setState({author: e.target.value});
 	}
 	handleCommentChange(e){
-		this.setState({comment: e.target.value});
+		this.setState({text: e.target.value});
 	}
 	handleSubmit(e){
 		e.preventDefault();
-		console.log(`${this.state.author} said "${this.state.comment}"`);
+		let author = this.state.author.trim();
+		let text = this.state.text.trim();
+		if(!text || !author){
+			return;
+		}
+		//console.log("author",author,"text",text);
+		this.props.onCommentSubmit({author: author,text:text});
+		this.setState({author:"",text:""});
 	}
 	render(){
 		return(
@@ -31,7 +38,7 @@ class commentform extends Component{
 					<input
 					type = 'text'
 					placeholder = 'your comment'
-					value = {this.state.comment}
+					value = {this.state.text}
 					onChange = {this.handleCommentChange}
 					/>
 					<input

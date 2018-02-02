@@ -9,12 +9,22 @@ class CommentBox extends Component{
 			data:[]
 		};
 		this.loadComments = this.loadComments.bind(this);
+		this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
 	}
 	//render comments from db
 	loadComments(){
 		axios.get(this.props.url).then(
 			res=>{this.setState({data:res.data});}
 		)
+	}
+	//handle comments posted to db
+	handleCommentSubmit(comment){
+		//define submission
+		axios.post(this.props.url,comment).then(res=>{
+			this.loadComments();
+		}).catch(err=>{
+			console.log(err);
+		})
 	}
 	//post comments from db
 	componentDidMount(){
@@ -25,7 +35,7 @@ class CommentBox extends Component{
 		return(
 			<div>
 				<h2>Comments</h2>
-				<CommentForm/>
+				<CommentForm onCommentSubmit = { this.handleCommentSubmit }/>
 				<CommentList data={this.state.data}/>
 			</div>
 			)
