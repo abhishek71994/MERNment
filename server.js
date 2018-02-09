@@ -52,7 +52,32 @@ app.post("/comments",function(req,res){
 			res.send({ message:"Coomments added... YAY!" });
 		}
 	})
-})
+});
+//updating the comments
+app.put("/comments/:comment_id",function(req,res){
+	Comment.findById(req.params.comment_id,function(err,comment){
+		if(err){
+			res.send(err);
+		}
+		(req.body.author) ? comment.author = req.body.author : null;
+		(req.body.text) ? comment.text = req.body.text : null;
+		comment.save(function(err){
+			if(err){
+				res.send(err);
+			}
+			res.json({ message : "Comment has been updated" });
+		});
+	});
+});
+//deleting the comments
+app.delete("/comments/:comment_id",function(req,res){
+	Comment.remove({ _id: req.params.comment_id },function(err,comment){
+		if(err){
+			res.send(err);
+		}
+		res.json({ message : "Comment has been deleted" });
+	});
+});
 //setup the app
 app.listen(port,function(){
 	console.log(`The app is running on port ${port}`);
